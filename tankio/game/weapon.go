@@ -1,6 +1,8 @@
 package game
 
 import (
+	"fmt"
+	"sync/atomic"
 	"time"
 )
 
@@ -148,10 +150,11 @@ func (m *Mortar) Update(dt float64) {
 	}
 }
 
-// Simple ID generator (in production, use UUID)
+// Thread-safe ID generator using atomic counter
+// In production, consider using UUID for truly unique IDs
 var idCounter int64
 
 func generateID() string {
-	idCounter++
-	return string(rune('A'+idCounter%26)) + string(rune('0'+idCounter%10))
+	id := atomic.AddInt64(&idCounter, 1)
+	return fmt.Sprintf("B%d", id)
 }
